@@ -65,7 +65,7 @@ const twilioClient = twilio(twilio_sid, twilio_auth);
  */
 
 // Holds channel ID
-let channel = '#general'
+let channel = process.env.SLACK_DEFAULT_CHANNEL
 // Holds bot user ID
 let botID;
 // The port we'll be using for our Express server
@@ -155,8 +155,7 @@ function sendSMS(msg, id) {
 			if (num) {
 				twilioClient.messages.create({
 					to: num,
-					// from: your Twilio phone number
-					from: '+14155555555',
+					from: process.env.TWILIO_PHONE_NUMBER,
 					body: msg
 				});
 			}
