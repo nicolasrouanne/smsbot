@@ -69,7 +69,7 @@ let channel = process.env.SLACK_DEFAULT_CHANNEL
 // Holds bot user ID
 let botID;
 // The port we'll be using for our Express server
-const PORT = 4390;
+const PORT = process.env.PORT || 3000;
 
 // Starts our server
 app.listen(PORT, function() {
