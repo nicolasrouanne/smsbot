@@ -188,9 +188,32 @@ function sendSMS(msg, id = null, number = null) {
 	}
 }
 
-function sendMessage(text, channel, num) {
+function sendMessage(msg, channel, num) {
+    const text = `Received SMS from ${num}`;
+    // format message to have number look nice
+    const attachments = {
+        attachments: JSON.stringify([
+          {
+            fallback: `${num}: ${msg}`,
+            fields: [
+              {
+                title: "From",
+                value: num,
+                short: true
+              },
+              {
+                title: "Message",
+                value: msg,
+                short: false
+              }
+            ],
+            color: "#46A7F1"
+          }
+        ])
+      };
+
 	// Send message using Slack Web Client
-	web.chat.postMessage(channel, text, function(err, info) {
+	web.chat.postMessage(channel, text, attachments, function(err, info) {
 		if (err) {
 			console.log(err);
 		} else {
