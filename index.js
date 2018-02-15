@@ -105,10 +105,24 @@ slackEvents.on('reaction_added', (event) => {
 
 slackEvents.on('message', (event) => {
 	let trigger = '<@' + botID + '>';
-	if (event.thread_ts && event.text.startsWith(trigger)) {
-		let msg = event.text.replace(trigger, '');
-		sendSMS(msg, event.thread_ts);
-	}
+    
+    // if message is addressed to bot
+    if (event.text.startsWith(trigger)) {
+        let msg = event.text.replace(trigger, '');
+
+        // if message is sent in a thread, send SMS to user in thread
+        if (event.thread_ts) {
+            sendSMS(msg, event.thread_ts);
+        }
+        // if message is not in a thread send a new SMS to a number retrieved 
+        // in first parameter of the message
+        else {
+            // extract and remove number before sending SMS
+            let number = msg.split(' ')[1];
+            msg = msg.replace(number, '');
+            sendSMS(msg, null, number);
+        }
+    }
 });
 
 // Handles incoming SMS to Twilio number
@@ -149,8 +163,11 @@ app.get('/auth', function(req, res) {
 	});
 });
 
-function sendSMS(msg, id) { 
-	getNum(id)
+function sendSMS(msg, id = null, number = null) { 
+	// if an ID is present, message comes from a thread
+	// retrieve phone number from DB and send SMS to that number
+	if (id) {
+		getNum(id)
 		.then((num) => {
 			if (num) {
 				twilioClient.messages.create({
@@ -161,6 +178,14 @@ function sendSMS(msg, id) {
 			}
 		})
 		.catch(console.error)
+    } else if (number) {
+        // if a number is provided, send a message to that number
+		twilioClient.messages.create({
+			to: number,
+			from: process.env.TWILIO_PHONE_NUMBER,
+			body: msg
+		});
+	}
 }
 
 function sendMessage(text, channel, num) {
