@@ -39,3 +39,22 @@ You can **start your project** :rocket:
 ```
 $ npm start
 ```
+
+### Deployment
+The recommended deployment method is on **_Google App Engine_**, although you can virtually deploy this _Node.js_ application anywhere you like.
+
+If you deploy on **_Google App Engine_**, you must specify a `app.yaml` file with all your configuration options, including _environment variables_. As this contains secrets, the `app.yaml` is not checked in source control.
+
+A good start for an `app.yaml` file is to copy the `app.yaml.example` and replace placeholder values with your actual credentials
+```bash
+# copy the example app.yaml into your app.yaml file
+$ cp app.yaml.example app.yaml
+# edit the file and replace dummy credentials by actual ones
+$ nano app.yaml
+```
+
+You need [**to set up `Google Cloud SDK`**](https://cloud.google.com/appengine/docs/flexible/nodejs/download) on your machine, as well as [**create an App Engine application**](https://cloud.google.com/appengine/docs/flexible/nodejs/managing-projects-apps-billing#create).
+Then you can deploy your application
+```bash
+$ gcloud app deploy
+```
