@@ -31,18 +31,34 @@ SLACK_AUTH_TOKEN=xoxp-<your token>
 
 ### First run
 You should know have a complete `.env` file. Install the dependencies:
-```
+```bash
 $ yarn install
 ```  
 
 You can **start your project** :rocket:
-```
+```bash
 $ npm start
 ```
 
 ### Deployment
-The recommended deployment method is on **_Google App Engine_**, although you can virtually deploy this _Node.js_ application anywhere you like.
+You can virtually deploy this _Node.js_ application anywhere you like; although here is some guides on how to deploy it on **Heroku** and **Google App Engine**.
 
+#### Heroku
+Create a **Heroku** app and deploy it (see [Deploying with git](https://devcenter.heroku.com/articles/git)).
+```bash
+$ git push heroku master
+```
+
+
+Then set your _environment variables_ in `.env` file. We will use the [`heroku-config`](https://github.com/xavdid/heroku-config) plugin to set those _environment variables_ in **Heroku**.
+```bash
+# install `heroku-config`
+$ heroku plugins:install heroku-config
+# push your config in .env to heroku
+$ heroku config:push
+```
+
+#### Google App Engine
 If you deploy on **_Google App Engine_**, you must specify a `app.yaml` file with all your configuration options, including _environment variables_. As this contains secrets, the `app.yaml` is not checked in source control.
 
 A good start for an `app.yaml` file is to copy the `app.yaml.example` and replace placeholder values with your actual credentials
